@@ -5,8 +5,21 @@ class App extends React.Component {
   constructor() {
     super()
     this.state = {
-      questions: []
+      questions: [],
+      answers: []
     }
+    this.handleChange = this.handleChange.bind(this)
+  }
+
+  handleChange(event) {
+    const {name, value} = event.target
+    this.setState(prevState => {
+      let answers = [... prevState.answers]
+      answers[name] = value
+      console.log(answers)
+      this.setState(answers)
+
+    })
   }
 
   componentDidMount() {
@@ -22,14 +35,14 @@ class App extends React.Component {
   }
   render () {
     const questionComponents = this.state.questions.map(question =>
-     <Question key={question.id} question={question.question} />)
+     <Question key={question.id} id={question.id} question={question.question} handleChange = {this.handleChange} />)
 
     return (
       <div>
         <h1> Questions!</h1>
         {questionComponents}
       </div>
-  )
+    )
   }
 
 }
