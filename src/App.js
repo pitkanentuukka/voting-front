@@ -1,26 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
+import Question from './Question';
 import './App.css';
+class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      questions: []
+    }
+  }
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  componentDidMount() {
+    fetch("http://localhost:7777/api/questions")
+      .then(response => response.json())
+      .then(data =>  {
+
+        this.setState({
+          questions: data
+        })
+
+      })
+  }
+  render () {
+    const questionComponents = this.state.questions.map(question =>
+     <Question key={question.id} question={question.question} />)
+
+    return (
+      <div>
+        <h1> Questions!</h1>
+        {questionComponents}
+      </div>
+  )
+  }
+
 }
-
 export default App;
