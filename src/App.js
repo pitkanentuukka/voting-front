@@ -7,6 +7,7 @@ class App extends React.Component {
     this.state = {
       questions: [],
       answers: []
+      /*answers: [{id: "", value:""}]*/
     }
     this.handleChange = this.handleChange.bind(this)
   }
@@ -14,7 +15,7 @@ class App extends React.Component {
   handleChange(event) {
     const {name, value} = event.target
     this.setState(prevState => {
-      let answers = [... prevState.answers]
+      let answers = [...prevState.answers]
       answers[name] = value
       console.log(answers)
       this.setState(answers)
@@ -23,7 +24,12 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:7777/api/questions")
+    fetch("/api/questions", {
+      mode: "cors",
+      headers: {
+        'Access-Control-Allow-Origin':'*'
+      }
+    })
       .then(response => response.json())
       .then(data =>  {
 

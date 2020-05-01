@@ -1,5 +1,6 @@
 {
   "name": "voting-front",
+  "proxy": "http://localhost:7777",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
