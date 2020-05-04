@@ -3,7 +3,7 @@ import React from "react"
 class Login extends React.Component {
   constructor(props) {
     super(props)
-    this.state{
+    this.state = {
       email: '',
       password: ''
     }
@@ -20,9 +20,27 @@ class Login extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault()
-    console.log("TODO: authenticate!")
+    fetch('/api/authenticate', {
+    method: 'POST',
+    body: JSON.stringify(this.state),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => {
+    if (res.status === 200) {
+      this.props.history.push('/');
+    } else {
+      const error = new Error(res.error);
+      throw error;
+    }
+  })
+  .catch(err => {
+    console.error(err);
+  });
+}
 
-  }
+
   render(){
     return (
       <form onSubmit={this.handleSubmit}>
@@ -47,6 +65,5 @@ class Login extends React.Component {
       </form>
     )
   }
-
-
 }
+export default Login
