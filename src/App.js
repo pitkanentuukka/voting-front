@@ -6,17 +6,21 @@ import Admin from './pages/Admin'
 import Voter from './pages/Voter'
 import Candidate from './pages/Candidate'
 import Home from './pages/Home'
+import PrivateRoute from './PrivateRoute'
+import { AuthContext } from './context/auth'
 
 function App() {
   return (
-    <Router>
-      <Route exact path='/' component={Home} />
-      <Route exact path='/admin' component={Admin} />
-      <Route exact path='/login' component={Login} />
-      <Route exact path='/voter' component={Voter} />
-      <Route exact path='/candidate' component={Candidate} />
+    <AuthContext.Provider value={false}>
+      <Router>
+        <Route exact path='/' component={Home} />
+        <PrivateRoute exact path='/admin' component={Admin} />
+        <Route exact path='/login' component={Login} />
+        <Route exact path='/voter' component={Voter} />
+        <Route exact path='/candidate' component={Candidate} />
 
-    </Router>
+      </Router>
+    </AuthContext.Provider>
   )
 }
 
