@@ -13,6 +13,7 @@ class Admin extends React.Component {
   }
 
   componentDidMount(){
+    console.log("component mounted")
     fetch('/api/authenticate/auth', {
       mode: "cors",
       headers: {

@@ -17,7 +17,7 @@ class QuestionList extends React.Component {
     this.setState(prevState => {
       let answers = [...prevState.answers]
       answers[name] = value
-      console.log(answers)
+      
       this.setState(answers)
 
     })
