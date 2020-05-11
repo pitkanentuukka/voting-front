@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 class Login extends React.Component {
   constructor(props) {
@@ -8,13 +8,13 @@ class Login extends React.Component {
       email: '',
       password: '',
       isLoggedIn: false,
-      isError: false,
+      //isError: false,
       msg: '',
 
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-
+    this.onLogout = this.onLogout.bind(this)
   }
 
   componentDidMount(){
@@ -25,7 +25,6 @@ class Login extends React.Component {
       }
     })
     .then(response => {
-      console.log(response.status)
       if (response.status === 403) {
         this.setState({isLoggedIn : false})
       } else if(response.status === 200) {
@@ -33,6 +32,28 @@ class Login extends React.Component {
       }
 
     })
+    .catch(err => {
+      console.error(err);
+    });
+  }
+
+  onLogout(event) {
+    fetch('/api/authenticate/logout', {
+      mode: 'cors',
+      headers: {
+        'Access-Control-Allow-Origin':'*'
+      }
+    })
+    .then(response => {
+      if (response.status === 200) {
+        this.setState({isLoggedIn: false})
+        this.setState({msg: "logged out!"})
+      }
+    })
+    .catch(err => {
+      console.error(err);
+    });
+
   }
 
   handleChange(event) {
@@ -45,37 +66,32 @@ class Login extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault()
+    this.setState({msg: ""})
     fetch('/api/authenticate', {
     method: 'POST',
     body: JSON.stringify(this.state),
     headers: {
       'Content-Type': 'application/json'
-    }
-  })
-  .then(res => {
-    if (res.status === 200) {
-      this.props.history.push('/');
-      this.setState(prevState => {
-        return prevState.isLoggedIn =true
-      })
-    } else {
-    /*  this.setState(prevState => {
-      return prevState.msg = res.json()})*/
-      console.log(res.json())
-
-    }
-  })
-  .catch(err => {
-    console.error(err);
-  });
-}
+      }
+    })
+    .then(res => {
+      if (res.status === 200) {
+        this.setState({isLoggedIn: true})
+      } else if (res.status === 400 || res.status === 403){
+        this.setState({msg: "invalid email or password"})
+      }
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  }
 
 
   render(){
-    console.log(this.state.isLoggedIn)
     if (this.state.isLoggedIn) {
       return <div><p>you've successfully logged in</p>
        <Link to="/admin">Admin panel</Link>
+       <button onClick={this.onLogout}>Log out</button>
        </div>
     }
     return (
