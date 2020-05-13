@@ -1,5 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
+import AdminQuestionList from './AdminQuestionList'
 
 class Admin extends React.Component {
   constructor(props) {
@@ -21,7 +22,6 @@ class Admin extends React.Component {
       }
     })
     .then(response => {
-      console.log(response.status)
       if (response.status === 403) {
         // forbidden, redirect
         this.setState({redirect : true})
@@ -42,7 +42,11 @@ class Admin extends React.Component {
 
     if (this.state.authorized) {
       return(
-        <h1>Hello Admin</h1>
+        <div><h1>Hello Admin</h1>
+        <AdminQuestionList />
+        </div>
+
+
       )
     }
     if (!this.state.authorized && !this.state.redirect) {
