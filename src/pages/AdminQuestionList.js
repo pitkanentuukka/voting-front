@@ -11,6 +11,8 @@ class AdminQuestionList extends React.Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
+
   }
 
   componentDidMount() {
@@ -28,6 +30,19 @@ class AdminQuestionList extends React.Component {
       })
   }
 
+  handleDelete(event) {
+    const name = event.target.name
+    fetch('/api/admin/deletequestion/'+ name, {
+      mode: "cors",
+      headers: {
+        'Access-Control-Allow-Origin':'*'
+      }
+    })
+    this.setState(prevState => {
+      let questions = prevState.questions.filter(item => item.id != name)
+      return {questions: questions}
+    })
+  }
 
   handleChange(event) {
     const {name, value} = event.target
@@ -51,7 +66,6 @@ class AdminQuestionList extends React.Component {
       if (data.status === 200) {
         this.setState({msg: "question added"})
         this.setState(prevState => {
-          ]
           let questions = prevState.questions.concat(data.body)
           return { questions: questions}
 
@@ -70,14 +84,19 @@ class AdminQuestionList extends React.Component {
 
   render () {
     const adminQuestionComponents = this.state.questions.map(question =>
-     <AdminQuestion key={question.id} id={question.id} question={question.question} />)
+     <AdminQuestion
+      key={question.id}
+      id={question.id}
+      question={question.question}
+      handleDelete={this.handleDelete}
+      />)
 
     return (
       <div>
         <h1> Questions!</h1>
         {adminQuestionComponents}
         <NewQuestionForm data={this.state.newQuestion} handleSubmit={this.handleSubmit}
-        handleChange={this.handleChange}/>
+        handleChange={this.handleChange} />
       </div>
     )
   }

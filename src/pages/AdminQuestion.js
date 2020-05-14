@@ -9,7 +9,8 @@ class AdminQuestion extends React.Component {
   render() {
     return (
       <div className="question">
-        <p>{this.props.question}</p>
+        <p><span>{this.props.question}  </span>
+        <button name={this.props.id} onClick={this.props.handleDelete}>delete</button></p>
       </div>
     )
 
