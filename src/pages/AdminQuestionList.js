@@ -1,6 +1,11 @@
 import React from "react"
 import AdminQuestion from './AdminQuestion'
 import NewQuestionForm from './NewQuestionForm'
+import Container from 'react-bootstrap/Container';
+import ListGroup from 'react-bootstrap/ListGroup';
+
+
+
 class AdminQuestionList extends React.Component {
   constructor() {
     super()
@@ -192,12 +197,15 @@ class AdminQuestionList extends React.Component {
       />)
 
     return (
-      <div>
-        <h1> Questions!</h1>
+
+      <ListGroup>
+
+        <h2> Questions!</h2>
         {adminQuestionComponents}
         <NewQuestionForm data={this.state.newQuestion} handleSubmit={this.handleSubmit}
         handleChange={this.handleChange} />
-      </div>
+      </ListGroup>
+      
     )
   }
 

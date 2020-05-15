@@ -1,5 +1,5 @@
 import React from "react"
-
+import Button from 'react-bootstrap/Button';
 class NewQuestionForm extends React.Component {
   constructor(props) {
     super(props)
@@ -15,14 +15,14 @@ class NewQuestionForm extends React.Component {
       <form onSubmit={this.props.handleSubmit}>
       <label>
       <input
-      type="text"
-      name="newQuestion"
-      value={this.props.newQuestion}
-      onChange={this.props.handleChange}
-      placeholder="enter question"
-      required
+        type="text"
+        name="newQuestion"
+        value={this.props.newQuestion}
+        onChange={this.props.handleChange}
+        placeholder="enter question"
+        required
       />
-      <button>submit</button>
+      <Button>submit</Button>
       </label>
       <p>{this.props.msg}</p>
       </form>

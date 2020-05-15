@@ -1,6 +1,8 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import AdminQuestionList from './AdminQuestionList'
+import Container from 'react-bootstrap/Container';
+
 
 class Admin extends React.Component {
   constructor(props) {
@@ -42,10 +44,13 @@ class Admin extends React.Component {
 
     if (this.state.authorized) {
       return(
-        <div><h1>Hello Admin</h1>
-        <AdminQuestionList />
-        </div>
+        <Container  className="p-1">
+          <h1>Hello Admin</h1>
+          <Container  className="p-2">
+            <AdminQuestionList />
+          </Container>
 
+        </Container>
 
       )
     }
