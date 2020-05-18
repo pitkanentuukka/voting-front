@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import AdminQuestionList from './AdminQuestionList'
+import AdminItemList from './AdminItemList'
 import Container from 'react-bootstrap/Container';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
@@ -50,7 +51,15 @@ class Admin extends React.Component {
           <Tab eventKey="Questions" title="Questions">
             <h1>Hello Admin</h1>
             <Container  className="p-2">
-              <AdminQuestionList />
+              <AdminItemList
+                title = 'Questions'
+                getItems = '/api/questions/'
+                deleteItem = '/api/admin/deletequestion/'
+                editItem = '/api/admin/editquestion/'
+                addItem = '/api/admin/addquestion/'
+                itemName = 'question'
+
+               />
             </Container>
           </Tab>
           <Tab eventKey="Districts" title="Districts">
