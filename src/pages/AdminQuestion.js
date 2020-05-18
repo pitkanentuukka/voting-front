@@ -1,7 +1,9 @@
 import React from "react"
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import ListGroup from 'react-bootstrap/ListGroup';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 
 class AdminQuestion extends React.Component {
   constructor(props) {
@@ -13,15 +15,19 @@ class AdminQuestion extends React.Component {
     if (this.props.edit === undefined || this.props.edit === false) {
       return (
         <Container className="p-4">
-        <div className="question">
-        <p><span>{this.props.question}  </span>
+        <Row>
+        <Col>
+        {this.props.question}
+        </Col>
+        <Col>
         <Button
           variant="danger"
           name={this.props.id}
           onClick={this.props.handleDelete}>
           Delete
         </Button>
-        <span> </span>
+        </Col>
+        <Col>
         <Button
           variant="success"
 
@@ -29,37 +35,67 @@ class AdminQuestion extends React.Component {
           onClick={this.props.enableEdit}>
           Edit
         </Button>
-        </p>
+        </Col>
+</Row>
 
-        </div>
         </Container>
       )
 
     } else {
       return (
-        <ListGroup.Item>
-        <div>
+        <Container className="p-4">
+        <Row>
+        <Col>
+        {this.props.question}
+        </Col>
+        <Col>
+        <Button
+          variant="danger"
+          name={this.props.id}
+          onClick={this.props.handleDelete}>
+          Delete
+        </Button>
+        </Col>
+        <Col>
+        <Button
+          variant="success"
+
+          name={this.props.id}
+          onClick={this.props.enableEdit}>
+          Edit
+        </Button>
+        </Col>
+        </Row>
+
+
+        <Row>
+        <Col>
         <input
+          style={{width:'100%'}}
           type='text'
           name={this.props.id}
           value={this.props.edit}
           onChange={this.props.handleEdit}>
         </input>
-        <span> </span>
+        </Col>
+        <Col>
         <Button
           name={this.props.id}
           onClick={this.props.sendEdited}>
           Submit
         </Button>
-        <span> </span>
+        </Col>
+        <Col>
         <Button
           variant="secondary"
           name={this.props.id}
           onClick={this.props.disableEdit}>
           Cancel
         </Button>
-        </div>
-        </ListGroup.Item>
+        </Col>
+        </Row>
+        </Container>
+
       )
     }
 

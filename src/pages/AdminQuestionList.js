@@ -52,9 +52,6 @@ class AdminQuestionList extends React.Component {
       })
       return questions
     })
-    console.log(this.state.questions.filter(question => {
-      return question.id == name
-    }));
   }
 
   sendEdited(event) {
@@ -62,8 +59,6 @@ class AdminQuestionList extends React.Component {
     const editedQuestion = this.state.questions.filter(question => {
       return question.id == name
     })
-
-  //  console.log(editedQuestion[0].edit);
 
     fetch("/api/admin/editquestion/"+ name, {
       headers: {
@@ -95,37 +90,32 @@ class AdminQuestionList extends React.Component {
         })
       } else {
         // maybe let the user try again
+        // display an error?
       }
     })
-
   }
 
   enableEdit(event) {
     const name = event.target.name
-
     this.setState(prevState => {
       let questions = prevState.questions.map(question => {
         if (question.id == name) {
           question.edit = question.question
-
         }
       })
       return questions
     })
-    //this.setState(prevState =>  {return {editableQuestion: editableQuestion}})
   }
 
 
   disableEdit(event) {
     const name = event.target.name
-
     this.setState(prevState => {
       let questions = prevState.questions.map(question => {
         if (question.id == name) {
           delete question.edit
         }
       })
-
       return questions
     })
   }
@@ -150,7 +140,6 @@ class AdminQuestionList extends React.Component {
   }
 
 
-
    handleSubmit(event) {
     event.preventDefault()
     fetch("/api/admin/addquestion", {
@@ -167,7 +156,6 @@ class AdminQuestionList extends React.Component {
         this.setState(prevState => {
           let questions = prevState.questions.concat(data.body)
           return { questions: questions}
-
         })
         this.setState({newQuestion : ''})
       } else if (data.status === 400) {
@@ -177,9 +165,6 @@ class AdminQuestionList extends React.Component {
       }
     })
   }
-
-
-
 
   render () {
     const adminQuestionComponents = this.state.questions.map(question =>
@@ -193,21 +178,19 @@ class AdminQuestionList extends React.Component {
       sendEdited={this.sendEdited}
       enableEdit={this.enableEdit}
       disableEdit={this.disableEdit}
-
-      />)
+    />)
 
     return (
-
-      <ListGroup>
-
+      <Container className="p-3">
         <h2> Questions!</h2>
         {adminQuestionComponents}
-        <NewQuestionForm data={this.state.newQuestion} handleSubmit={this.handleSubmit}
-        handleChange={this.handleChange} />
-      </ListGroup>
-      
+        <NewQuestionForm
+          data={this.state.newQuestion}
+          handleSubmit={this.handleSubmit}
+          handleChange={this.handleChange}
+        />
+      </Container>
     )
   }
-
 }
 export default AdminQuestionList;

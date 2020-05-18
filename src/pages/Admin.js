@@ -2,7 +2,8 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import AdminQuestionList from './AdminQuestionList'
 import Container from 'react-bootstrap/Container';
-
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
 
 class Admin extends React.Component {
   constructor(props) {
@@ -45,11 +46,28 @@ class Admin extends React.Component {
     if (this.state.authorized) {
       return(
         <Container  className="p-1">
-          <h1>Hello Admin</h1>
-          <Container  className="p-2">
-            <AdminQuestionList />
-          </Container>
+        <Tabs defaultActiveKey="Questions" id="admin-page-tabs">
+          <Tab eventKey="Questions" title="Questions">
+            <h1>Hello Admin</h1>
+            <Container  className="p-2">
+              <AdminQuestionList />
+            </Container>
+          </Tab>
+          <Tab eventKey="Districts" title="Districts">
+            <h1>Hello Admin</h1>
+            <Container  className="p-2">
+              <h2>Districts</h2>
 
+            </Container>
+          </Tab>
+          <Tab eventKey="Parties" title="Parties">
+            <h1>Hello Admin</h1>
+            <Container  className="p-2">
+              <h2>Parties</h2>
+
+            </Container>
+            </Tab>
+          </Tabs>
         </Container>
 
       )
