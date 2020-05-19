@@ -65,15 +65,32 @@ class Admin extends React.Component {
           <Tab eventKey="Districts" title="Districts">
             <h1>Hello Admin</h1>
             <Container  className="p-2">
-              <h2>Districts</h2>
 
+              <AdminItemList
+                title = 'Districts'
+                getItems = '/api/districts/'
+                deleteItem = '/api/admin/deletedistrict/'
+                editItem = '/api/admin/editdistrict/'
+                addItem = '/api/admin/adddistrict/'
+                itemName = 'district'
+
+               />
             </Container>
+
+
           </Tab>
           <Tab eventKey="Parties" title="Parties">
             <h1>Hello Admin</h1>
             <Container  className="p-2">
-              <h2>Parties</h2>
+            <AdminItemList
+              title = 'Parties'
+              getItems = '/api/parties/'
+              deleteItem = '/api/admin/deleteparty/'
+              editItem = '/api/admin/editparty/'
+              addItem = '/api/admin/addparty/'
+              itemName = 'party'
 
+             />
             </Container>
             </Tab>
           </Tabs>
