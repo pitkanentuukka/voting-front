@@ -13,6 +13,13 @@ class AdminItem extends React.Component {
 
   render() {
     let editItem
+    let link
+
+    if (this.props.link) {
+      link = <Col>{this.props.link}</Col>
+    } else {
+      link = null
+    }
 
     if (this.props.edit) {
       editItem =
@@ -25,29 +32,15 @@ class AdminItem extends React.Component {
       />
 
     } else {
-      editItem = null;
-    }
-  /*  if (this.props.edit === undefined || this.props.edit === false) {
       editItem = null
-    } else {
-      editItem =
-      <AdminEditItem
-        id = {this.props.id}
-        edit = {this.props.edit}
-        handleEdit = {this.props.handleEdit}
-        sendEdited = {this.props.sendEdited}
-        disableEdit = {this.props.disableEdit}
-      />
-
     }
-*/
       return (
         <Container className="p-4">
           <Row>
-            <Col>
+            <Col xs={4}>
             {this.props.item}
             </Col>
-            <Col>
+            <Col xs={1}>
               <Button
                 variant="danger"
                 name={this.props.id}
@@ -55,7 +48,7 @@ class AdminItem extends React.Component {
                 Delete
               </Button>
             </Col>
-            <Col>
+            <Col xs={1}>
               <Button
                 variant="success"
                 name={this.props.id}
@@ -63,6 +56,7 @@ class AdminItem extends React.Component {
                 Edit
               </Button>
             </Col>
+            {link}
           </Row>
           {editItem}
         </Container>

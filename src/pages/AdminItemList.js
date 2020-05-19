@@ -183,18 +183,28 @@ class AdminItemList extends React.Component {
   }
 
   render () {
-    const adminItemComponents = this.state.items.map(item =>
-     <AdminItem
-      key={item.id}
-      id={item.id}
-      item={item.item}
-      edit={item.edit}
-      handleDelete={this.handleDelete}
-      handleEdit={this.handleEdit}
-      sendEdited={this.sendEdited}
-      enableEdit={this.enableEdit}
-      disableEdit={this.disableEdit}
-    />)
+    const adminItemComponents = this.state.items.map(item => {
+      let fullLink
+      if (item.link) {
+        if (window.location.port) {
+          fullLink = window.location.hostname + ':'+ window.location.port + '/Candidate/' + item.link
+        } else {
+          fullLink = window.location.hostname + '/Candidate/' + item.link
+        }
+      }
+      return <AdminItem
+        key={item.id}
+        id={item.id}
+        item={item.item}
+        edit={item.edit}
+        link={fullLink}
+        handleDelete={this.handleDelete}
+        handleEdit={this.handleEdit}
+        sendEdited={this.sendEdited}
+        enableEdit={this.enableEdit}
+        disableEdit={this.disableEdit}
+      />
+    })
 
     return (
       <Container className="p-3">

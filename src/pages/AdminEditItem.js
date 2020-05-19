@@ -9,7 +9,7 @@ import Row from 'react-bootstrap/Row';
 function AdminEditItem (props) {
   return (
     <Row>
-      <Col>
+      <Col xs={4}>
         <input
           style={{width:'100%'}}
           type='text'
@@ -18,7 +18,7 @@ function AdminEditItem (props) {
           onChange={props.handleEdit}>
         </input>
         </Col>
-      <Col>
+      <Col xs={1}>
         <Button
           name={props.id}
           onClick={props.sendEdited}>
@@ -26,7 +26,7 @@ function AdminEditItem (props) {
         </Button>
       </Col>
       <Col>
-        <Button
+        <Button xs={1}
           variant="secondary"
           name={props.id}
           onClick={props.disableEdit}>
