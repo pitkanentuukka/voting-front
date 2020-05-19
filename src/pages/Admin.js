@@ -1,6 +1,5 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import AdminQuestionList from './AdminQuestionList'
 import AdminItemList from './AdminItemList'
 import Container from 'react-bootstrap/Container';
 import Tabs from 'react-bootstrap/Tabs';
