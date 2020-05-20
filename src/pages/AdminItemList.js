@@ -187,7 +187,10 @@ class AdminItemList extends React.Component {
       let fullLink
       if (item.link) {
         if (window.location.port) {
-          fullLink = window.location.hostname + ':'+ window.location.port + '/Candidate/' + item.link
+          fullLink = window.location.hostname
+            + ':'+ window.location.port
+            + '/candidate/' + 'id=' + item.id +
+            '&link=' + item.link
         } else {
           fullLink = window.location.hostname + '/Candidate/' + item.link
         }
