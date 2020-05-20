@@ -172,6 +172,9 @@ class AdminItemList extends React.Component {
           let newItem = {}
           newItem.id = data.body.id
           newItem.item = data.body[this.props.itemName]
+          if (data.body.link) {
+            newItem.link = data.body.link
+          }
           let items = prevState.items.concat(newItem)
           return { items: items}
         })
@@ -191,7 +194,7 @@ class AdminItemList extends React.Component {
         if (window.location.port) {
           fullLink = window.location.hostname
             + ':'+ window.location.port
-            + '/candidate/' + 'id=' + item.id +
+            + '/candidate/' + '?id=' + item.id +
             '&link=' + item.link
         } else {
           fullLink = window.location.hostname + '/Candidate/' + item.link
