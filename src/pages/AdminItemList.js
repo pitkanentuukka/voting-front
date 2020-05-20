@@ -133,17 +133,19 @@ class AdminItemList extends React.Component {
   }
 
   handleDelete(event) {
-    const name = event.target.name
-    fetch(this.props.deleteItem+ name, {
-      mode: "cors",
-      headers: {
-        'Access-Control-Allow-Origin':'*'
-      }
-    })
-    this.setState(prevState => {
-      let items = prevState.items.filter(item => item.id != name)
-      return {items: items}
-    })
+    if (window.confirm('delete ' + this.props.itemName + '?')) {
+      const name = event.target.name
+      fetch(this.props.deleteItem+ name, {
+        mode: "cors",
+        headers: {
+          'Access-Control-Allow-Origin':'*'
+        }
+      })
+      this.setState(prevState => {
+        let items = prevState.items.filter(item => item.id != name)
+        return {items: items}
+      })
+    }
   }
 
   handleChange(event) {
