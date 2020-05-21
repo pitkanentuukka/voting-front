@@ -2,8 +2,7 @@ import React from "react"
 import NewItemForm from './NewItemForm'
 import AdminItem from './AdminItem'
 import Container from 'react-bootstrap/Container';
-import ListGroup from 'react-bootstrap/ListGroup';
-
+import {Link} from 'react-router-dom'
 /**
 * Displays an editable list of items. For every item, there's a delete button,
 * an edit button that displays an input field with the item and save / cancel buttons.
@@ -77,7 +76,7 @@ class AdminItemList extends React.Component {
         'Content-Type': 'application/json',
       },
       method: "POST",
-      body: JSON.stringify({itemName: editedItem[0].edit})
+      body: JSON.stringify({[itemName]: editedItem[0].edit})
     })
     .then(response => {
       if (response.status === 200) {
@@ -109,6 +108,7 @@ class AdminItemList extends React.Component {
 
   enableEdit(event) {
     const name = event.target.name
+
     this.setState(prevState => {
       let items = prevState.items.map(item => {
         if (item.id == name) {
@@ -191,14 +191,12 @@ class AdminItemList extends React.Component {
     const adminItemComponents = this.state.items.map(item => {
       let fullLink
       if (item.link) {
-        if (window.location.port) {
-          fullLink = window.location.hostname
-            + ':'+ window.location.port
-            + '/candidate/' + '?id=' + item.id +
-            '&link=' + item.link
-        } else {
-          fullLink = window.location.hostname + '/Candidate/' + item.link
-        }
+
+        fullLink = (<Link to={{
+          pathname:'Candidate',
+          search:`?id=${item.id}&link=${item.link}`
+
+        }}>Link!</Link>)
       }
       return <AdminItem
         key={item.id}
