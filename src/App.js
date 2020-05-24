@@ -14,7 +14,7 @@ function App() {
         <Route exact path='/admin' component={Admin} />
         <Route exact path='/login' component={Login} />
         <Route exact path='/voter' component={Voter} />
-        <Route exact path='/candidate' component={Candidate} />
+        <Route path='/candidate/' component={Candidate} />
 
       </Router>
   )
