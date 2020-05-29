@@ -1,6 +1,8 @@
 import React from 'react'
 import queryString from 'query-string'
 import CandidateForm from './CandidateForm'
+import AnswerForm from './AnswerForm'
+
 import {
   BrowserRouter as Router,
   Link,
@@ -19,10 +21,16 @@ class Candidate extends React.Component {
     this.state = {
       validLink :  '',
       partyName : '',
-
+      districts: [],
+      selectedOption: null,
+      answers: {},
+      answerTexts: {},
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.handleAnswerChange = this.handleAnswerChange.bind(this)
+    this.handleAnswerTextChange = this.handleAnswerTextChange.bind(this)
+    this.handleDistrictChange = this.handleDistrictChange.bind(this)
   }
 
   componentDidMount() {
@@ -39,7 +47,7 @@ class Candidate extends React.Component {
     .then(r =>  r.json().then(data => ({status: r.status, body: data})))
     .then(data => {
         if (data.status === 200) {
-          console.log(data.body[0].party);
+
           this.setState({validLink : true, partyName: data.body[0].party})
         } else {
           this.setState({validLink : false})
@@ -49,10 +57,59 @@ class Candidate extends React.Component {
     } else {
       this.setState({validLink : false})
     }
+
+    /* get districts */
+    fetch('/api/districts/', {
+      mode: "cors",
+      headers: {
+        'Access-Control-Allow-Origin':'*'
+      }
+    })
+      .then(response => response.json())
+      .then(data =>  {
+
+        this.setState({districts: data})
+    })
+
   }
 
+  handleDistrictChange( selectedOption ) {
+    console.log(selectedOption);
+    this.setState({ selectedOption})
+  }
+
+
   handleSubmit(event) {
-    console.log("submit!");
+    this.getQuestions()
+
+    //console.log("submit!");
+    fetch('/api/parties/addcandidate', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: "POST",
+      body: JSON.stringify({name: this.state.name,
+        number: this.state.number,
+        district: this.state.selectedOption.id })
+    })
+    .then((response) => response.json())
+    .then(json => {
+      this.setState({candidateId: json.candidateid})
+    })
+    this.getQuestions()
+  }
+
+  getQuestions() {
+    fetch('/api/questions', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: "GET",
+    })
+    .then((response) => response.json())
+    .then(json => {
+      this.setState({questions: json})
+    })
   }
 
   handleChange(event) {
@@ -60,15 +117,52 @@ class Candidate extends React.Component {
     this.setState({[name]: value})
   }
 
-
+  handleAnswerChange(event) {
+    const {name, value} = event.target
+    this.setState(prevState => {
+      let answers = prevState.answers
+      answers[name] = value
+      this.setState({answers: answers})
+    })
+  }
+  handleAnswerTextChange(event) {
+    const {name, value} = event.target
+    this.setState(prevState => {
+      let answerTexts = prevState.answerTexts
+      answerTexts[name] = value
+      this.setState({answerTexts: answerTexts})
+    })
+  }
   render() {
-    return (
-      <CandidateForm
-        partyName={this.state.partyName}
-        handleChange={this.handleChange}
-        handleSubmit={this.handleSubmit}
-      />
-    )
+    if (!this.state.candidateId) {
+
+      return (
+        <CandidateForm
+          partyName={this.state.partyName}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          districts={this.state.districts}
+          handleDistrictChange={this.handleDistrictChange}
+        />
+      )
+    } else {
+      const answerComponents = this.state.questions.map(question =>
+       <AnswerForm
+        key={question.id}
+        id={question.id}
+        question={question.question}
+        handleChange = {this.handleAnswerChange}
+        handleTextChange = {this.handleAnswerTextChange}
+        answerText = {this.state.answerTexts[question.id]}
+
+        />)
+
+      return (
+        <Container>
+          {answerComponents}
+        </Container>
+      )
+    }
   }
 }
 
