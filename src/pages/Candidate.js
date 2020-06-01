@@ -23,8 +23,7 @@ class Candidate extends React.Component {
       partyName : '',
       districts: [],
       selectedOption: null,
-      answers: {},
-      answerTexts: {},
+      answers: [],
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -118,19 +117,31 @@ class Candidate extends React.Component {
   }
 
   handleAnswerChange(event) {
-    const {name, value} = event.target
+    //const {name, value} = event.target
+    const name = parseInt(event.target.name)
+    const value = event.target.value
+    console.log(name, value);
     this.setState(prevState => {
-      let answers = prevState.answers
-      answers[name] = value
+      let answers = {...prevState.answers}
+      console.log(answers);
+      if(!answers[name]) {
+        answers[name] = {value: value[0]}
+      } else {
+        answers[name].value = value
+      }
       this.setState({answers: answers})
     })
   }
   handleAnswerTextChange(event) {
     const {name, value} = event.target
     this.setState(prevState => {
-      let answerTexts = prevState.answerTexts
-      answerTexts[name] = value
-      this.setState({answerTexts: answerTexts})
+      let answers = prevState.answers
+      if(!answers[name]) {
+        answers[name] = {text: value[0]}
+      } else {
+        answers[name].text = value
+      }
+      this.setState({answers: answers})
     })
   }
   render() {
@@ -153,7 +164,7 @@ class Candidate extends React.Component {
         question={question.question}
         handleChange = {this.handleAnswerChange}
         handleTextChange = {this.handleAnswerTextChange}
-        answerText = {this.state.answerTexts[question.id]}
+        answerText = {this.state.answers[question.id] &&this.state.answers[question.id].text}
 
         />)
 
