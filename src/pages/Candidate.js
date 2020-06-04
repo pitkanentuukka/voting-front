@@ -30,6 +30,7 @@ class Candidate extends React.Component {
     this.handleAnswerChange = this.handleAnswerChange.bind(this)
     this.handleAnswerTextChange = this.handleAnswerTextChange.bind(this)
     this.handleDistrictChange = this.handleDistrictChange.bind(this)
+    this.handleAnswersSubmit = this.handleAnswersSubmit.bind(this)
   }
 
   componentDidMount() {
@@ -73,7 +74,6 @@ class Candidate extends React.Component {
   }
 
   handleDistrictChange( selectedOption ) {
-    console.log(selectedOption);
     this.setState({ selectedOption})
   }
 
@@ -81,7 +81,6 @@ class Candidate extends React.Component {
   handleSubmit(event) {
     this.getQuestions()
 
-    //console.log("submit!");
     fetch('/api/parties/addcandidate', {
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +94,6 @@ class Candidate extends React.Component {
     .then(json => {
       this.setState({candidateId: json.candidateid})
     })
-    this.getQuestions()
   }
 
   getQuestions() {
@@ -120,10 +118,8 @@ class Candidate extends React.Component {
     //const {name, value} = event.target
     const name = parseInt(event.target.name)
     const value = event.target.value
-    console.log(name, value);
     this.setState(prevState => {
       let answers = {...prevState.answers}
-      console.log(answers);
       if(!answers[name]) {
         answers[name] = {value: value[0]}
       } else {
@@ -144,6 +140,11 @@ class Candidate extends React.Component {
       this.setState({answers: answers})
     })
   }
+
+  handleAnswersSubmit(event) {
+
+  }
+
   render() {
     if (!this.state.candidateId) {
 
@@ -164,6 +165,7 @@ class Candidate extends React.Component {
         question={question.question}
         handleChange = {this.handleAnswerChange}
         handleTextChange = {this.handleAnswerTextChange}
+        submitHandler = {this.handleAnswersSubmit}
         answerText = {this.state.answers[question.id] &&this.state.answers[question.id].text}
 
         />)

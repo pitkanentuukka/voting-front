@@ -17,7 +17,6 @@ class Admin extends React.Component {
   }
 
   componentDidMount(){
-    console.log("component mounted")
     fetch('/api/authenticate/auth', {
       mode: "cors",
       headers: {
@@ -29,7 +28,7 @@ class Admin extends React.Component {
         // forbidden, redirect
         this.setState({redirect : true})
       } else if(response.status === 200) {
-        // if not redirect, load the admin components or data for them?
+        // if not redirect, load the admin components
         this.setState({authorized : true})
       }
 
@@ -37,9 +36,8 @@ class Admin extends React.Component {
   }
   render(){
     if (this.state.redirect) {
-        return(
+        return (
            <Redirect to="/" />
-
         )
     }
 

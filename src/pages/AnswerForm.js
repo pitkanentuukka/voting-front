@@ -12,15 +12,18 @@ function AnswerForm(props) {
     <Container className="p-4">
       <Row>
         <Col>
-          {props.question}
+          <h4>{props.question}</h4>
         </Col>
       </Row>
-      <Row>
 
+      <Row>
           {labels.map((label, idx) => {
              return (
-               <Col>
+               <div>
+              <Col>
                 <label key={label}>{label}</label>
+              </Col>
+              <Col xs="1">
                 <input
                   type="radio"
                   name={props.id}
@@ -29,10 +32,12 @@ function AnswerForm(props) {
                   />
 
               </Col>
-
+              </div>
              )
           })}
-      </Row>
+          </Row>
+
+
       <Row>
         <Col xs="2">Explanation</Col>
         <Col>
