@@ -6,7 +6,8 @@ import AnswerForm from './AnswerForm'
 import {
   BrowserRouter as Router,
   Link,
-  useLocation
+  useLocation,
+  Redirect
 } from "react-router-dom";
 
 import Button from 'react-bootstrap/Button';
@@ -19,7 +20,8 @@ class Candidate extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      validLink :  '',
+      step: 1,
+      candidateId: '',
       partyName : '',
       districts: [],
       selectedOption: null,
@@ -35,7 +37,7 @@ class Candidate extends React.Component {
 
   componentDidMount() {
     let validLink
-    const value=queryString.parse(this.props.location.search);
+    const value = queryString.parse(this.props.location.search);
     if (value.id && value.link) {
       fetch('/api/parties/validate?id=' + value.id + '&link=' + value.link, {
         headers: {
@@ -48,14 +50,14 @@ class Candidate extends React.Component {
     .then(data => {
         if (data.status === 200) {
 
-          this.setState({validLink : true, partyName: data.body[0].party})
+          this.setState({step: 2, partyName: data.body[0].party})
         } else {
-          this.setState({validLink : false})
+          this.setState({step: 0})
         }
 
       })
     } else {
-      this.setState({validLink : false})
+      this.setState({step: 0})
     }
 
     /* get districts */
@@ -67,7 +69,6 @@ class Candidate extends React.Component {
     })
       .then(response => response.json())
       .then(data =>  {
-
         this.setState({districts: data})
     })
 
@@ -92,8 +93,22 @@ class Candidate extends React.Component {
     })
     .then((response) => response.json())
     .then(json => {
-      this.setState({candidateId: json.candidateid})
+      this.setState({candidateId: json.candidateid, step: 3})
     })
+  }
+
+  handleAnswersSubmit(event) {
+    console.log(JSON.stringify({answers: this.state.answers}));
+    fetch('/api/answers/addanswers', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify({answers: this.state.answers })
+    })
+    .then((response) => response.json())
+    .then(this.setState({step: 4}))
+
   }
 
   getQuestions() {
@@ -101,7 +116,7 @@ class Candidate extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      method: "GET",
+      method: 'GET',
     })
     .then((response) => response.json())
     .then(json => {
@@ -141,12 +156,65 @@ class Candidate extends React.Component {
     })
   }
 
-  handleAnswersSubmit(event) {
 
-  }
 
   render() {
-    if (!this.state.candidateId) {
+    const step = this.state.step
+    switch (step) {
+      case 0:
+      return (
+        <Redirect to="/" />
+      )
+      case 1:
+      return (
+        <h1>authorizing, please wait</h1>
+      )
+      case 2:
+      return (
+        <CandidateForm
+          partyName={this.state.partyName}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          districts={this.state.districts}
+          handleDistrictChange={this.handleDistrictChange}
+        />
+      )
+      case 3:
+      const answerComponents = this.state.questions.map(question =>
+       <AnswerForm
+        key={question.id}
+        id={question.id}
+        question={question.question}
+        handleChange = {this.handleAnswerChange}
+        handleTextChange = {this.handleAnswerTextChange}
+        submitHandler = {this.handleAnswersSubmit}
+        answerText = {this.state.answers[question.id]
+              &&this.state.answers[question.id].text}
+
+        />)
+      return (
+        <Container>
+          {answerComponents}
+          <Row>
+          <Col>
+           <Button onClick={this.handleAnswersSubmit}>submit</Button>
+
+          </Col>
+          </Row>
+        </Container>
+      )
+      case 4:
+      return (
+        <h1> thank you for participating!</h1>
+      )
+    }
+    /*if (this.state.redirect) {
+      return (
+        <Redirect to="/" />
+      )
+    }
+
+      if (!this.state.candidateId ) {
 
       return (
         <CandidateForm
@@ -157,7 +225,7 @@ class Candidate extends React.Component {
           handleDistrictChange={this.handleDistrictChange}
         />
       )
-    } else {
+    } else if (this.state.candidateId){
       const answerComponents = this.state.questions.map(question =>
        <AnswerForm
         key={question.id}
@@ -173,9 +241,15 @@ class Candidate extends React.Component {
       return (
         <Container>
           {answerComponents}
+          <Row>
+          <Col>
+           <Button onClick={this.handleAnswersSubmit}>submit</Button>
+
+          </Col>
+          </Row>
         </Container>
       )
-    }
+    }*/
   }
 }
 
