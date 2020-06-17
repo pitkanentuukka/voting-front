@@ -1,7 +1,4 @@
 import React from 'react'
-import Button from 'react-bootstrap/Button';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -10,6 +7,7 @@ function AnswerForm(props) {
   const labels = ['strongly disagree', 'disagree', 'no opinion', 'agree', 'strongly agree']
   return (
     <Container className="p-4">
+
       <Row>
         <Col>
           <h4>{props.question}</h4>
@@ -17,27 +15,25 @@ function AnswerForm(props) {
       </Row>
 
       <Row>
-          {labels.map((label, idx) => {
-             return (
-               <div>
-              <Col>
-                <label key={label}>{label}</label>
-              </Col>
-              <Col xs="1">
-                <input
-                  type="radio"
-                  name={props.id}
-                  value={idx + 1}
-                  onChange={event => props.handleChange(event)}
-                  />
+        {labels.map((label, idx) => {
+           return (
+             <div>
+            <Col>
+              <label key={label}>{label}</label>
+            </Col>
+            <Col xs="1">
+              <input
+                type="radio"
+                name={props.id}
+                value={idx + 1}
+                onChange={event => props.handleChange(event)}
+                />
 
-              </Col>
-              </div>
-             )
-          })}
-          </Row>
-
-
+            </Col>
+            </div>
+           )
+        })}
+      </Row>
       <Row>
         <Col xs="2">Explanation</Col>
         <Col>
@@ -49,14 +45,10 @@ function AnswerForm(props) {
             onChange={props.handleTextChange}
             placeholder="enter "
             value={props.answerText}
-
           />
         </Col>
-
       </Row>
-      </Container>
-
-
+    </Container>
   )
 
 }

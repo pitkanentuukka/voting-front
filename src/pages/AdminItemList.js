@@ -56,7 +56,7 @@ class AdminItemList extends React.Component {
     const {name, value} = event.target
     this.setState(prevState => {
       let items = prevState.items.map(item => {
-        if (item.id == name) {
+        if (item.id === name) {
           item.edit = value
         }
       })
@@ -68,7 +68,7 @@ class AdminItemList extends React.Component {
     const itemName = this.props.itemName
     const name = event.target.name
     const editedItem = this.state.items.filter(item => {
-      return item.id == name
+      return item.id === name
     })
 
     fetch(this.props.editItem + name, {
@@ -83,7 +83,7 @@ class AdminItemList extends React.Component {
 
         this.setState(prevState => {
           let items = this.state.items.map(item => {
-            if (item.id == name) {
+            if (item.id === name) {
               // looks like whatever is here doesn't occur synchronously
               // so we need to call this twice
               item.item = item.edit
@@ -93,7 +93,7 @@ class AdminItemList extends React.Component {
         })
         this.setState(prevState => {
           let items = this.state.items.map(item => {
-            if (item.id == name) {
+            if (item.id === name) {
               delete item.edit
             }
           })
@@ -111,7 +111,7 @@ class AdminItemList extends React.Component {
 
     this.setState(prevState => {
       let items = prevState.items.map(item => {
-        if (item.id == name) {
+        if (item.id === name) {
           item.edit = item.item
         }
       })
@@ -124,7 +124,7 @@ class AdminItemList extends React.Component {
     const name = event.target.name
     this.setState(prevState => {
       let items = prevState.items.map(item => {
-        if (item.id == name) {
+        if (item.id === name) {
           delete item.edit
         }
       })
@@ -142,7 +142,7 @@ class AdminItemList extends React.Component {
         }
       })
       this.setState(prevState => {
-        let items = prevState.items.filter(item => item.id != name)
+        let items = prevState.items.filter(item => item.id !== name)
         return {items: items}
       })
     }

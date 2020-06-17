@@ -3,12 +3,7 @@ import queryString from 'query-string'
 import CandidateForm from './CandidateForm'
 import AnswerForm from './AnswerForm'
 
-import {
-  BrowserRouter as Router,
-  Link,
-  useLocation,
-  Redirect
-} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -36,7 +31,6 @@ class Candidate extends React.Component {
   }
 
   componentDidMount() {
-    let validLink
     const value = queryString.parse(this.props.location.search);
     if (value.id && value.link) {
       fetch('/api/parties/validate?id=' + value.id + '&link=' + value.link, {
@@ -208,48 +202,6 @@ class Candidate extends React.Component {
         <h1> thank you for participating!</h1>
       )
     }
-    /*if (this.state.redirect) {
-      return (
-        <Redirect to="/" />
-      )
-    }
-
-      if (!this.state.candidateId ) {
-
-      return (
-        <CandidateForm
-          partyName={this.state.partyName}
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSubmit}
-          districts={this.state.districts}
-          handleDistrictChange={this.handleDistrictChange}
-        />
-      )
-    } else if (this.state.candidateId){
-      const answerComponents = this.state.questions.map(question =>
-       <AnswerForm
-        key={question.id}
-        id={question.id}
-        question={question.question}
-        handleChange = {this.handleAnswerChange}
-        handleTextChange = {this.handleAnswerTextChange}
-        submitHandler = {this.handleAnswersSubmit}
-        answerText = {this.state.answers[question.id] &&this.state.answers[question.id].text}
-
-        />)
-
-      return (
-        <Container>
-          {answerComponents}
-          <Row>
-          <Col>
-           <Button onClick={this.handleAnswersSubmit}>submit</Button>
-
-          </Col>
-          </Row>
-        </Container>
-      )
-    }*/
   }
 }
 

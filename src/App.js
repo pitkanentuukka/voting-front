@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { BrowserRouter as Router, Link, Route } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import Login from './Login';
 import Admin from './pages/Admin'
 import Voter from './pages/Voter'
