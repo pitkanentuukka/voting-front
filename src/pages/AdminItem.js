@@ -10,20 +10,20 @@ function AdminItem(props) {
   let editItem
   let link
 
-  if (this.props.link) {
-    link = <Col>{this.props.link}</Col>
+  if (props.link) {
+    link = <Col>{props.link}</Col>
   } else {
     link = null
   }
 
-  if (this.props.edit) {
+  if (props.edit) {
     editItem =
     <AdminEditItem
-      id = {this.props.id}
-      edit = {this.props.edit}
-      handleEdit = {this.props.handleEdit}
-      sendEdited = {this.props.sendEdited}
-      disableEdit = {this.props.disableEdit}
+      id = {props.id}
+      edit = {props.edit}
+      handleEdit = {props.handleEdit}
+      sendEdited = {props.sendEdited}
+      disableEdit = {props.disableEdit}
     />
 
   } else {
@@ -33,21 +33,21 @@ function AdminItem(props) {
       <Container className="p-4">
         <Row>
           <Col xs={4}>
-          {this.props.item}
+          {props.item}
           </Col>
           <Col xs={1}>
             <Button
               variant="danger"
-              name={this.props.id}
-              onClick={this.props.handleDelete}>
+              name={props.id}
+              onClick={props.handleDelete}>
               Delete
             </Button>
           </Col>
           <Col xs={1}>
             <Button
               variant="success"
-              name={this.props.id}
-              onClick={this.props.enableEdit}>
+              name={props.id}
+              onClick={props.enableEdit}>
               Edit
             </Button>
           </Col>

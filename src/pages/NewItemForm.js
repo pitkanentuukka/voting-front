@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-function NewItemForm() {
+function NewItemForm(props) {
   return (
     <Container className="p-4">
       <Row>
@@ -13,21 +13,21 @@ function NewItemForm() {
             style={{width:'100%'}}
             type="text"
             name="newItem"
-            value={this.props.newItem}
-            onChange={this.props.handleChange}
+            value={props.newItem}
+            onChange={props.handleChange}
             placeholder="enter "
             required
           />
         </Col>
         <Col>
-          <Button onClick={this.props.handleSubmit}>submit</Button>
+          <Button onClick={props.handleSubmit}>submit</Button>
         </Col>
         <Col>
         </Col>
       </Row>
       <Row>
         <Col>
-          {this.props.msg}
+          {props.msg}
         </Col>
       </Row>
     </Container>
