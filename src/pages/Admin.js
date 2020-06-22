@@ -81,7 +81,7 @@ class Admin extends React.Component {
             <Container  className="p-2">
             <AdminItemList
               title = 'Parties'
-              getItems = '/api/parties/'
+              getItems = '/api/admin/partiesandlinks'
               deleteItem = '/api/admin/deleteparty/'
               editItem = '/api/admin/editparty/'
               addItem = '/api/admin/addparty/'
