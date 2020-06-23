@@ -1,5 +1,5 @@
 import React from 'react'
-import QuestionList from './QuestionList'
+import Question from './Question'
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -18,8 +18,9 @@ class Voter extends React.Component {
       parties: [],
       answers: [],
       questions: [],
-      OwnAnswers: [],
+      ownAnswers: [],
     }
+    this.handleChange = this.handleChange.bind(this)
     this.handleSelectParty = this.handleSelectParty.bind(this)
     this.handleSelectDistrict = this.handleSelectDistrict.bind(this)
     this.filterCandidates = this.filterCandidates.bind(this)
@@ -48,12 +49,9 @@ class Voter extends React.Component {
   }
 
   handleSelectParty(selectedOption) {
-    //console.log("selected party: " + selectedOption);
     this.setState({selectedParty: selectedOption}, this.filterCandidates)
-  //  this.filterCandidates()
   }
   handleSelectDistrict(selectedOption) {
-
     this.setState({selectedDistrict: selectedOption}, this.filterCandidates)
   }
 
@@ -92,18 +90,43 @@ class Voter extends React.Component {
     this.setState({filteredCandidates : filteredCandidates})
   }
 
+  handleChange(event) {
+    const name = parseInt(event.target.name)
+    const value = event.target.value
+    this.setState(prevState => {
+      let answers = {...prevState.ownAnswers}
+      if(!answers[name]) {
+        answers[name] = {value: value[0]}
+      } else {
+        answers[name].value = value
+      }
+      this.setState({ownAnswers: answers})
+    })
+  }
+
   render() {
-    let districts = this.state.districts.map(item => {
+    const districts = this.state.districts.map(item => {
       item.label = item.district
       item.value = item.id
       return item
     })
 
-    let parties = this.state.parties.map(item => {
+    const parties = this.state.parties.map(item => {
       item.label = item.party
       item.value = item.id
       return item
     })
+
+    const questionComponents = this.state.questions.map(question => {
+      return <Question
+        key={question.id}
+        id={question.id}
+        question={question.question}
+        handleChange = {this.handleChange}
+        />
+      })
+
+
     return (
       <Container  className="p-1">
 
@@ -132,8 +155,7 @@ class Voter extends React.Component {
         />
         </Col>
         </Row>
-
-      <QuestionList />
+        {questionComponents}
       </Container>
     )
   }
