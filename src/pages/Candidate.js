@@ -3,7 +3,7 @@ import queryString from 'query-string'
 import CandidateForm from './CandidateForm'
 import AnswerForm from './AnswerForm'
 
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -17,7 +17,7 @@ class Candidate extends React.Component {
     this.state = {
       step: 1,
       candidateId: '',
-      partyName : '',
+      partyName: '',
       districts: [],
       selectedOption: null,
       answers: [],
@@ -37,39 +37,39 @@ class Candidate extends React.Component {
         headers: {
           'Content-Type': 'application/json',
         },
-          method: "GET",
+        method: "GET",
 
       })
-    .then(r =>  r.json().then(data => ({status: r.status, body: data})))
-    .then(data => {
-        if (data.status === 200) {
+        .then(r => r.json().then(data => ({ status: r.status, body: data })))
+        .then(data => {
+          if (data.status === 200) {
 
-          this.setState({step: 2, partyName: data.body[0].party})
-        } else {
-          this.setState({step: 0})
-        }
+            this.setState({ step: 2, partyName: data.body[0].party })
+          } else {
+            this.setState({ step: 0 })
+          }
 
-      })
+        })
     } else {
-      this.setState({step: 0})
+      this.setState({ step: 0 })
     }
 
     /* get districts */
     fetch('/api/districts/', {
       mode: "cors",
       headers: {
-        'Access-Control-Allow-Origin':'*'
+        'Access-Control-Allow-Origin': '*'
       }
     })
       .then(response => response.json())
-      .then(data =>  {
-        this.setState({districts: data})
-    })
+      .then(data => {
+        this.setState({ districts: data })
+      })
 
   }
 
-  handleDistrictChange( selectedOption ) {
-    this.setState({ selectedOption})
+  handleDistrictChange(selectedOption) {
+    this.setState({ selectedOption })
   }
 
 
@@ -81,27 +81,30 @@ class Candidate extends React.Component {
         'Content-Type': 'application/json',
       },
       method: "POST",
-      body: JSON.stringify({name: this.state.name,
+      body: JSON.stringify({
+        name: this.state.name,
         number: this.state.number,
-        district: this.state.selectedOption.id })
+        email: this.state.email,
+        district: this.state.selectedOption.id
+      })
     })
-    .then((response) => response.json())
-    .then(json => {
-      this.setState({candidateId: json.candidateid, step: 3})
-    })
+      .then((response) => response.json())
+      .then(json => {
+        this.setState({ candidateId: json.candidateid, step: 3 })
+      })
   }
 
   handleAnswersSubmit(event) {
-    console.log(JSON.stringify({answers: this.state.answers}));
+    console.log(JSON.stringify({ answers: this.state.answers }));
     fetch('/api/answers/addanswers', {
       headers: {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-      body: JSON.stringify({answers: this.state.answers })
+      body: JSON.stringify({ answers: this.state.answers })
     })
-    .then((response) => response.json())
-    .then(this.setState({step: 4}))
+      .then((response) => response.json())
+      .then(this.setState({ step: 4 }))
 
   }
 
@@ -112,15 +115,15 @@ class Candidate extends React.Component {
       },
       method: 'GET',
     })
-    .then((response) => response.json())
-    .then(json => {
-      this.setState({questions: json})
-    })
+      .then((response) => response.json())
+      .then(json => {
+        this.setState({ questions: json })
+      })
   }
 
   handleChange(event) {
-    const {name, value} = event.target
-    this.setState({[name]: value})
+    const { name, value } = event.target
+    this.setState({ [name]: value })
   }
 
   handleAnswerChange(event) {
@@ -128,25 +131,25 @@ class Candidate extends React.Component {
     const name = parseInt(event.target.name)
     const value = event.target.value
     this.setState(prevState => {
-      let answers = {...prevState.answers}
-      if(!answers[name]) {
-        answers[name] = {value: value[0]}
+      let answers = { ...prevState.answers }
+      if (!answers[name]) {
+        answers[name] = { value: value[0] }
       } else {
         answers[name].value = value
       }
-      this.setState({answers: answers})
+      this.setState({ answers: answers })
     })
   }
   handleAnswerTextChange(event) {
-    const {name, value} = event.target
+    const { name, value } = event.target
     this.setState(prevState => {
       let answers = prevState.answers
-      if(!answers[name]) {
-        answers[name] = {text: value[0]}
+      if (!answers[name]) {
+        answers[name] = { text: value[0] }
       } else {
         answers[name].text = value
       }
-      this.setState({answers: answers})
+      this.setState({ answers: answers })
     })
   }
 
@@ -156,51 +159,51 @@ class Candidate extends React.Component {
     const step = this.state.step
     switch (step) {
       case 0:
-      return (
-        <Redirect to="/" />
-      )
+        return (
+          <Redirect to="/" />
+        )
       case 1:
-      return (
-        <h1>authorizing, please wait</h1>
-      )
+        return (
+          <h1>authorizing, please wait</h1>
+        )
       case 2:
-      return (
-        <CandidateForm
-          partyName={this.state.partyName}
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSubmit}
-          districts={this.state.districts}
-          handleDistrictChange={this.handleDistrictChange}
-        />
-      )
+        return (
+          <CandidateForm
+            partyName={this.state.partyName}
+            handleChange={this.handleChange}
+            handleSubmit={this.handleSubmit}
+            districts={this.state.districts}
+            handleDistrictChange={this.handleDistrictChange}
+          />
+        )
       case 3:
-      const answerComponents = this.state.questions.map(question =>
-       <AnswerForm
-        key={question.id}
-        id={question.id}
-        question={question.question}
-        handleChange = {this.handleAnswerChange}
-        handleTextChange = {this.handleAnswerTextChange}
-        submitHandler = {this.handleAnswersSubmit}
-        answerText = {this.state.answers[question.id]
-              &&this.state.answers[question.id].text}
+        const answerComponents = this.state.questions.map(question =>
+          <AnswerForm
+            key={question.id}
+            id={question.id}
+            question={question.question}
+            handleChange={this.handleAnswerChange}
+            handleTextChange={this.handleAnswerTextChange}
+            submitHandler={this.handleAnswersSubmit}
+            answerText={this.state.answers[question.id]
+              && this.state.answers[question.id].text}
 
-        />)
-      return (
-        <Container>
-          {answerComponents}
-          <Row>
-          <Col>
-           <Button onClick={this.handleAnswersSubmit}>submit</Button>
+          />)
+        return (
+          <Container>
+            {answerComponents}
+            <Row>
+              <Col>
+                <Button onClick={this.handleAnswersSubmit}>submit</Button>
 
-          </Col>
-          </Row>
-        </Container>
-      )
+              </Col>
+            </Row>
+          </Container>
+        )
       case 4:
-      return (
-        <h1> thank you for participating!</h1>
-      )
+        return (
+          <h1> thank you for participating!</h1>
+        )
     }
   }
 }
