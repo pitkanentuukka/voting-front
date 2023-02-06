@@ -16,79 +16,79 @@ class Admin extends React.Component {
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     fetch('/api/authenticate/auth', {
       mode: "cors",
       headers: {
-        'Access-Control-Allow-Origin':'*'
+        'Access-Control-Allow-Origin': '*'
       }
     })
-    .then(response => {
-      if (response.status === 403) {
-        // forbidden, redirect
-        this.setState({redirect : true})
-      } else if(response.status === 200) {
-        // if not redirect, load the admin components
-        this.setState({authorized : true})
-      }
+      .then(response => {
+        if (response.status === 403) {
+          // forbidden, redirect
+          this.setState({ redirect: true })
+        } else if (response.status === 200) {
+          // if not redirect, load the admin components
+          this.setState({ authorized: true })
+        }
 
-    })
+      })
   }
-  render(){
+  render() {
     if (this.state.redirect) {
-        return (
-           <Redirect to="/" />
-        )
+      return (
+        <Redirect to="/" />
+      )
     }
 
     if (this.state.authorized) {
-      return(
-        <Container  className="p-1">
-        <Tabs defaultActiveKey="Questions" id="admin-page-tabs">
-          <Tab eventKey="Questions" title="Questions">
-            <h1>Hello Admin</h1>
-            <Container  className="p-2">
-              <AdminItemList
-                title = 'Questions'
-                getItems = '/api/questions/'
-                deleteItem = '/api/admin/deletequestion/'
-                editItem = '/api/admin/editquestion/'
-                addItem = '/api/admin/addquestion/'
-                itemName = 'question'
+      return (
+        <Container className="p-1">
+          <Tabs defaultActiveKey="Questions" id="admin-page-tabs">
+            <Tab eventKey="Questions" title="Questions">
+              <h1>Hello Admin</h1>
+              <Container className="p-2">
+                <AdminItemList
+                  title='Questions'
+                  getItems='/api/questions/'
+                  deleteItem='/api/admin/question/'
+                  editItem='/api/admin/editquestion/'
+                  addItem='/api/admin/addquestion/'
+                  itemName='question'
 
-               />
-            </Container>
-          </Tab>
-          <Tab eventKey="Districts" title="Districts">
-            <h1>Hello Admin</h1>
-            <Container  className="p-2">
+                />
+              </Container>
+            </Tab>
+            <Tab eventKey="Districts" title="Districts">
+              <h1>Hello Admin</h1>
+              <Container className="p-2">
 
-              <AdminItemList
-                title = 'Districts'
-                getItems = '/api/districts/'
-                deleteItem = '/api/admin/deletedistrict/'
-                editItem = '/api/admin/editdistrict/'
-                addItem = '/api/admin/adddistrict/'
-                itemName = 'district'
+                <AdminItemList
+                  title='Districts'
+                  getItems='/api/districts/'
+                  deleteItem='/api/admin/district/'
+                  editItem='/api/admin/editdistrict/'
+                  addItem='/api/admin/adddistrict/'
+                  itemName='district'
 
-               />
-            </Container>
+                />
+              </Container>
 
 
-          </Tab>
-          <Tab eventKey="Parties" title="Parties">
-            <h1>Hello Admin</h1>
-            <Container  className="p-2">
-            <AdminItemList
-              title = 'Parties'
-              getItems = '/api/admin/partiesandlinks'
-              deleteItem = '/api/admin/deleteparty/'
-              editItem = '/api/admin/editparty/'
-              addItem = '/api/admin/addparty/'
-              itemName = 'party'
+            </Tab>
+            <Tab eventKey="Parties" title="Parties">
+              <h1>Hello Admin</h1>
+              <Container className="p-2">
+                <AdminItemList
+                  title='Parties'
+                  getItems='/api/admin/partiesandlinks'
+                  deleteItem='/api/admin/party/'
+                  editItem='/api/admin/editparty/'
+                  addItem='/api/admin/addparty/'
+                  itemName='party'
 
-             />
-            </Container>
+                />
+              </Container>
             </Tab>
           </Tabs>
         </Container>

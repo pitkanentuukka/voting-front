@@ -53,7 +53,8 @@ class AdminItemList extends React.Component {
   }
 
   handleEdit(event) {
-    const { name, value } = event.target
+    const name = +event.target.name;
+    const value = event.target.value
     this.setState(prevState => {
       let items = prevState.items.map(item => {
         if (item.id === name) {
@@ -123,7 +124,7 @@ class AdminItemList extends React.Component {
 
 
   disableEdit(event) {
-    const name = event.target.name
+    const name = +event.target.name
     this.setState(prevState => {
       let items = prevState.items.map(item => {
         if (item.id === name) {
@@ -136,9 +137,10 @@ class AdminItemList extends React.Component {
 
   handleDelete(event) {
     if (window.confirm('delete ' + this.props.itemName + '?')) {
-      const name = event.target.name
+      const name = +event.target.name
       fetch(this.props.deleteItem + name, {
         mode: "cors",
+        method: 'DELETE',
         headers: {
           'Access-Control-Allow-Origin': '*'
         }
