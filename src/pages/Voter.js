@@ -1,5 +1,6 @@
 import React from 'react'
 import Question from './Question'
+import CandidItem from './CandidItem'
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -10,29 +11,31 @@ class Voter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      step: 1,
       candidates: [],
-
+      filteredCandidates: [],
       selectedParty: null,
       selectedDistrict: null,
       districts: [],
       parties: [],
-      answers: [],
       questions: [],
       ownAnswers: [],
+      rankedCandidates: [],
+      isSubmitted: false,
+
+
     }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSelectParty = this.handleSelectParty.bind(this)
-    this.handleSelectDistrict = this.handleSelectDistrict.bind(this)
-    this.filterCandidates = this.filterCandidates.bind(this)
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSubmitDistrict = this.handleSubmitDistrict.bind(this);
+    this.handleSelectDistrict = this.handleSelectDistrict.bind(this);
 
   }
 
   componentDidMount() {
-    this.getStuff('/api/questions', 'questions')
-    this.getStuff('/api/parties', 'parties')
-    this.getStuff('/api/districts', 'districts')
-    this.getStuff('/api/answers', 'answers')
-    this.getStuff('/api/candidates', 'candidates')
+    this.getStuff('/api/questions', 'questions');
+    this.getStuff('/api/parties', 'parties');
+    this.getStuff('/api/districts', 'districts');
   }
 
   getStuff(url, stateArray) {
@@ -42,67 +45,76 @@ class Voter extends React.Component {
       },
       method: 'GET',
     })
-    .then((response) => response.json())
-    .then(json => {
-      this.setState({[stateArray]: json})
-    })
+      .then((response) => response.json())
+      .then(json => {
+        this.setState({ [stateArray]: json })
+      })
   }
 
-  handleSelectParty(selectedOption) {
-    this.setState({selectedParty: selectedOption}, this.filterCandidates)
-  }
+
   handleSelectDistrict(selectedOption) {
-    this.setState({selectedDistrict: selectedOption}, this.filterCandidates)
+    this.setState({ selectedDistrict: selectedOption.id })
   }
 
-
-  filterCandidates() {
-    let filteredCandidates = this.state.candidates
-    console.log(this.state.selectedDistrict);
-    console.log(this.state.selectedParty);
-
-    // filter by party
-    if (this.state.selectedParty !== null) {
-      let partyFilteredCandidates = []
-      for (let i = 0; i < this.state.selectedParty.length; i++) {
-        for (let j = 0; j < filteredCandidates.length; j++) {
-          if (parseInt(this.state.selectedParty[i].id)
-              === parseInt(filteredCandidates[j].party_id)) {
-                  partyFilteredCandidates.push(filteredCandidates[j])
-          }
-        }
-      }
-      filteredCandidates = partyFilteredCandidates
+  handleSubmitDistrict() {
+    if (this.state.selectedDistrict) {
+      const url = '/api/answers/candidatesandanswers2/' + this.state.selectedDistrict;
+      this.getStuff(url, 'candidates')
+      this.setState({ step: 2 });
     }
-    // filter by district
-    if (this.state.selectedDistrict !== null) {
-      let districtFilteredCandidates = []
-      for (let i = 0; i < this.state.selectedDistrict.length; i++) {
-        for (let j = 0; j < filteredCandidates.length; j++) {
-          if (parseInt(this.state.selectedDistrict[i].id)
-              === parseInt(filteredCandidates[j].district_id)) {
-                  districtFilteredCandidates.push(filteredCandidates[j])
-          }
-        }
-      }
-      filteredCandidates = districtFilteredCandidates
-    }
-    this.setState({filteredCandidates : filteredCandidates})
   }
+
 
   handleChange(event) {
     const name = parseInt(event.target.name)
     const value = event.target.value
     this.setState(prevState => {
-      let answers = {...prevState.ownAnswers}
-      if(!answers[name]) {
-        answers[name] = {value: value[0]}
+      let answers = { ...prevState.ownAnswers }
+      if (!answers[name]) {
+        answers[name] = { value: value[0] }
       } else {
         answers[name].value = value
       }
-      this.setState({ownAnswers: answers})
+      this.setState({ ownAnswers: answers })
+
     })
   }
+  rankCandidates(candidates, voterAnswers) {
+    // Step 1: Create an empty list for the ranking
+    const ranking = [];
+
+    // Step 2: Loop through each candidate and their answers
+    candidates.forEach(candidate => {
+      let score = 0;
+
+      // Step 3: For each candidate, calculate a score based on the number of answers that match the voter's answers
+      candidate.answers.forEach(answer => {
+        const question = answer.question_id;
+        const candidateAnswer = answer.answer;
+        const voterAnswer = voterAnswers[question].value;
+        score += (Math.abs(candidateAnswer - voterAnswer))
+      });
+
+      // Step 4: Add the candidate and their score to the ranking list
+      ranking.push({
+        candidate: candidate,
+        score: score
+      });
+    });
+
+    // Step 5: Sort the ranking list based on the scores, with the highest score at the top
+    ranking.sort((a, b) => a.score - b.score);
+
+    // Step 6: Return the ranking list
+    this.setState({ rankedCandidates: ranking })
+  }
+
+
+  handleSubmit() {
+    this.rankCandidates(this.state.candidates, this.state.ownAnswers);
+    this.setState({ step: 3 });
+  }
+
 
   render() {
     const districts = this.state.districts.map(item => {
@@ -122,42 +134,103 @@ class Voter extends React.Component {
         key={question.id}
         id={question.id}
         question={question.question}
-        handleChange = {this.handleChange}
+        handleChange={this.handleChange}
+      />
+    })
+
+    if (this.state.step === 1) {
+      return (
+        <Container
+          className="p-1">
+          <Row>
+            <Col>
+              <Container
+                className="p-2"
+                maxWidth="48%">
+
+                <Row>
+                  <Col xs="2">
+                    District:
+                  </Col>
+                  <Col xs="3">
+                    <Select
+                      options={districts}
+                      onChange={this.handleSelectDistrict}
+
+                    />
+
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Button onClick={this.handleSubmitDistrict}>submit</Button>
+
+                  </Col>
+                </Row>
+              </Container>
+            </Col>
+          </Row>
+        </Container>
+      )
+    } else if (this.state.step === 2) {
+      return (
+        <Container
+          className="p-1">
+          <Row>
+            <Col>
+              <Container
+                className="p-2"
+                maxWidth="48%">
+
+
+                {questionComponents}
+                <Row>
+                  <Col>
+                    <Button onClick={this.handleSubmit}>submit</Button>
+
+                  </Col>
+                </Row>
+              </Container>
+
+            </Col>
+          </Row>
+        </Container>
+
+      )
+    } else if (this.state.step === 3) {
+      const candidComponents = this.state.rankedCandidates.map(candidate => {
+        console.log(candidate.candidate.id)
+        return <CandidItem
+          key={candidate.candidate.id}
+          id={candidate.candidate.id}
+          name={candidate.candidate.name}
+          number={candidate.candidate.number}
+          party_id={candidate.candidate.party_id}
+
+          handleChange={this.handleChange}
         />
       })
 
 
-    return (
-      <Container  className="p-1">
+      return (
+        <Container>
+          <Row>
+            <Col>
+              <h1>
+                Sopivimmat ehdokkaat:
+              </h1>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              {candidComponents}
+            </Col>
+          </Row>
+        </Container>
+      )
+    }
 
-      <Row>
-      <Col xs="2">
-       District:
-      </Col>
-      <Col xs="3">
-       <Select
-         options={districts}
-         onChange={this.handleSelectDistrict}
-         isMulti={true}
-       />
 
-      </Col>
-      </Row>
-      <Row>
-      <Col xs="2">
-        Party:
-      </Col>
-      <Col xs="3">
-        <Select
-          options={parties}
-          onChange={this.handleSelectParty}
-          isMulti={true}
-        />
-        </Col>
-        </Row>
-        {questionComponents}
-      </Container>
-    )
   }
 }
 export default Voter
