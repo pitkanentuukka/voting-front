@@ -21,6 +21,13 @@ class Candidate extends React.Component {
       districts: [],
       selectedOption: null,
       answers: [],
+      facebook: '',
+      twitter: '',
+      website: '',
+      linkedin: '',
+      tiktok: '',
+      instagram: ''
+
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleChange = this.handleChange.bind(this)
@@ -85,7 +92,13 @@ class Candidate extends React.Component {
         name: this.state.name,
         number: this.state.number,
         email: this.state.email,
-        district: this.state.selectedOption.id
+        district: this.state.selectedOption.id,
+        facebook: this.state.facebook,
+        twitter: this.state.twitter,
+        website: this.state.website,
+        linkedin: this.state.linkedin,
+        tiktok: this.state.tiktok,
+        instagram: this.state.instagram
       })
     })
       .then((response) => response.json())

@@ -72,6 +72,97 @@ function CandidateForm(props) {
           </Row>
           <Row>
             <Col xs="2">
+              Your facebook:
+            </Col>
+            <Col>
+              <input
+                type='text'
+                name='facebook'
+                onChange={props.handleChange}
+                placeholder='your facebook'
+
+              />
+            </Col>
+
+          </Row>
+          <Row>
+            <Col xs="2">
+              Your twitter:
+            </Col>
+            <Col>
+              <input
+                type='text'
+                name='twitter'
+                onChange={props.handleChange}
+                placeholder='your twitter'
+
+              />
+            </Col>
+
+          </Row>
+          <Row>
+            <Col xs="2">
+              Your website:
+            </Col>
+            <Col>
+              <input
+                type='text'
+                name='website'
+                onChange={props.handleChange}
+                placeholder='your website'
+
+              />
+            </Col>
+
+          </Row>
+          <Row>
+            <Col xs="2">
+              Your LinkedIn:
+            </Col>
+            <Col>
+              <input
+                type='text'
+                name='linkedin'
+                onChange={props.handleChange}
+                placeholder='your LinkedIn'
+
+              />
+            </Col>
+
+          </Row>
+          <Row>
+            <Col xs="2">
+              Your tiktok:
+            </Col>
+            <Col>
+              <input
+                type='text'
+                name='tiktok'
+                onChange={props.handleChange}
+                placeholder='your tiktok'
+
+              />
+            </Col>
+
+          </Row>
+          <Row>
+            <Col xs="2">
+              Your instagram:
+            </Col>
+            <Col>
+              <input
+                type='text'
+                name='instagram'
+                onChange={props.handleChange}
+                placeholder='your instagram'
+
+              />
+            </Col>
+
+          </Row>
+
+          <Row>
+            <Col xs="2">
               District:
             </Col>
             <Col xs="3">
