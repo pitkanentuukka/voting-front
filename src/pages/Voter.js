@@ -13,7 +13,6 @@ class Voter extends React.Component {
     this.state = {
       step: 1,
       candidates: [],
-      filteredCandidates: [],
       selectedParty: null,
       selectedDistrict: null,
       districts: [],
@@ -58,7 +57,7 @@ class Voter extends React.Component {
 
   handleSubmitDistrict() {
     if (this.state.selectedDistrict) {
-      const url = '/api/answers/candidatesandanswers2/' + this.state.selectedDistrict;
+      const url = '/api/answers/candidatesandanswers/' + this.state.selectedDistrict;
       this.getStuff(url, 'candidates')
       this.setState({ step: 2 });
     }
@@ -205,7 +204,7 @@ class Voter extends React.Component {
           id={candidate.candidate.id}
           name={candidate.candidate.name}
           number={candidate.candidate.number}
-          party_id={candidate.candidate.party_id}
+          party={candidate.candidate.party}
 
           handleChange={this.handleChange}
         />
