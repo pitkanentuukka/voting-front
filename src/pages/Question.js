@@ -3,9 +3,9 @@ import React from "react"
 function Question(props) {
   return (
     <div className="question">
-      <p>{props.question}</p>
+      <p className="question-text">{props.question}</p>
       <label>strongly disagree</label>
-      <input
+      <input className="radio"
         type="radio"
         name={props.id}
         value="1"
@@ -13,7 +13,7 @@ function Question(props) {
       </input>
 
       <label> disagree</label>
-      <input
+      <input className="radio"
         type="radio"
         name={props.id}
         value="2"
@@ -21,7 +21,7 @@ function Question(props) {
       </input>
 
       <label>no opinion</label>
-      <input
+      <input className="radio"
         type="radio"
         name={props.id}
         value="3"
@@ -29,7 +29,7 @@ function Question(props) {
       </input>
 
       <label> agree</label>
-      <input
+      <input className="radio"
         type="radio"
         name={props.id}
         value="4"
@@ -37,7 +37,7 @@ function Question(props) {
       </input>
 
       <label>strongly agree</label>
-      <input
+      <input className="radio"
         type="radio"
         name={props.id}
         value="5"
