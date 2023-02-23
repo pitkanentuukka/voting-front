@@ -1,11 +1,13 @@
 import React from 'react'
-import Question from './Question'
 import CandidItem from './CandidItem'
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Select from 'react-select'
+import Select from 'react-select';
+import QuestionList from './QuestionList'
+import Question from './Question'
+
 
 class Voter extends React.Component {
   constructor(props) {
@@ -13,22 +15,19 @@ class Voter extends React.Component {
     this.state = {
       step: 1,
       candidates: [],
-      selectedParty: null,
       selectedDistrict: null,
+      selectedCandidate: null,
       districts: [],
       parties: [],
       questions: [],
       ownAnswers: [],
       rankedCandidates: [],
-      isSubmitted: false,
-
-
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSubmitDistrict = this.handleSubmitDistrict.bind(this);
     this.handleSelectDistrict = this.handleSelectDistrict.bind(this);
-
+    this.handleSelectCandidate = this.handleSelectCandidate.bind(this);
   }
 
   componentDidMount() {
@@ -63,20 +62,26 @@ class Voter extends React.Component {
     }
   }
 
+  handleSelectCandidate(selectedCandidate) {
+    this.setState({ selectedCandidate: selectedCandidate.id })
+  }
+
 
   handleChange(event) {
-    const name = parseInt(event.target.name)
-    const value = event.target.value
+    const name = parseInt(event.target.name);
+    const value = 1 + parseInt(event.target.value);
     this.setState(prevState => {
-      let answers = { ...prevState.ownAnswers }
-      if (!answers[name]) {
-        answers[name] = { value: value[0] }
-      } else {
-        answers[name].value = value
-      }
-      this.setState({ ownAnswers: answers })
-
-    })
+      const newQuestions = prevState.questions.map(question => {
+        if (question.id === name) {
+          return {
+            ...question,
+            value
+          };
+        }
+        return question;
+      });
+      return { questions: newQuestions };
+    });
   }
   rankCandidates(candidates, voterAnswers) {
     // Step 1: Create an empty list for the ranking
@@ -122,20 +127,7 @@ class Voter extends React.Component {
       return item
     })
 
-    const parties = this.state.parties.map(item => {
-      item.label = item.party
-      item.value = item.id
-      return item
-    })
 
-    const questionComponents = this.state.questions.map(question => {
-      return <Question
-        key={question.id}
-        id={question.id}
-        question={question.question}
-        handleChange={this.handleChange}
-      />
-    })
 
     if (this.state.step === 1) {
       return (
@@ -151,7 +143,7 @@ class Voter extends React.Component {
                   <Col xs="2">
                     District:
                   </Col>
-                  <Col xs="3">
+                  <Col xs="3" >
                     <Select
                       options={districts}
                       onChange={this.handleSelectDistrict}
@@ -172,6 +164,16 @@ class Voter extends React.Component {
         </Container>
       )
     } else if (this.state.step === 2) {
+      const questionComponents = this.state.questions.map(question => {
+        return <Question
+          key={question.id}
+          id={question.id}
+          question={question.question}
+          handleChange={this.handleChange}
+          value={question.value}
+        />
+      })
+
       return (
         <Container
           className="p-1">
@@ -181,6 +183,7 @@ class Voter extends React.Component {
                 className="p-2"
                 maxWidth="48%">
 
+                {/*<QuestionList candid={false} handleChange={this.handleChange} questions={this.state.questions} ownAnswers={this.state.ownAnswers} />*/}
 
                 {questionComponents}
                 <Row>
@@ -197,6 +200,15 @@ class Voter extends React.Component {
 
       )
     } else if (this.state.step === 3) {
+      /*const compareAnswerComponents = this.state.questions.map(question => {
+        return <CompareAnswers
+          key={question.id}
+          id={question.id}
+          question={question.question}
+          voterAnswer={this.state.ownAnswers[question.id]}
+          candidateAnswer={this.state.candidates[this.state.selectedCandidate].answers[question.id]}
+        />
+    })*/
       const candidComponents = this.state.rankedCandidates.map(candidate => {
         console.log(candidate.candidate.id)
         return <CandidItem
@@ -206,25 +218,39 @@ class Voter extends React.Component {
           number={candidate.candidate.number}
           party={candidate.candidate.party}
 
-          handleChange={this.handleChange}
+          handleSelectCandidate={this.handleSelectCandidate}
         />
       })
 
 
       return (
         <Container>
-          <Row>
-            <Col>
-              <h1>
-                Sopivimmat ehdokkaat:
-              </h1>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              {candidComponents}
-            </Col>
-          </Row>
+          <Container>
+            <Row>
+              <Col>
+                <h1>
+                  Sopivimmat ehdokkaat:
+                </h1>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                {candidComponents}
+              </Col>
+            </Row>
+
+          </Container>
+          <Container
+            className="p-2"
+            maxWidth="48%">
+
+            <QuestionList candid={false}
+              handleChange={this.handleChange}
+              questions={this.state.questions}
+              voterAnswer={this.state.ownAnswers}
+              candidAnswers={this.state.rankedCandidates[this.state.selectedCandidate]} />
+
+          </Container>
         </Container>
       )
     }
