@@ -28,19 +28,15 @@ questiontext is rendered in all cases.
 */
 
 export default function Question(props) {
-  /* const value = props.value;
-   const id = props.id;
-   useEffect(() => {
-     console.log(`selectedValue for question ${id} changed to ${value}`);
-   }, [value, id]);*/
+
 
   return (
     <Container>
       <QuestionText text={props.question} />
-      <QuestionForm selectedValue={props.value} handleChange={props.handleChange} id={props.id} />
+      <QuestionForm selectedValue={props.value} handleChange={props.handleChange} id={props.id} disabled={props.disabled} />
       {props.candid && <AnswerForm onAnswerTextChange={props.onAnswerTextChange} />}
-      {props.candidAnswer && <QuestionForm value={props.candidAnswer.value} disabled={true} />}
-      {props.candidAnswerText && <AnswerText value={props.candidAnswerText}
+      {props.candidateAnswer && <QuestionForm selectedValue={props.candidateAnswer} disabled={true} />}
+      {props.candidateAnswerText && <AnswerText value={props.candidateAnswerText}
 
         id={props.id} />}
 
@@ -48,56 +44,3 @@ export default function Question(props) {
   )
 }
 
-
-
-/*function Question(props) {
-  return (
-    <div className="question">
-      <p className="question-text">{props.question}</p>
-      <label>strongly disagree</label>
-      <input className="radio"
-        type="radio"
-        name={props.id}
-        value="1"
-        onChange={props.handleChange}>
-      </input>
-
-      <label> disagree</label>
-      <input className="radio"
-        type="radio"
-        name={props.id}
-        value="2"
-        onChange={props.handleChange}>
-      </input>
-
-      <label>no opinion</label>
-      <input className="radio"
-        type="radio"
-        name={props.id}
-        value="3"
-        onChange={props.handleChange}>
-      </input>
-
-      <label> agree</label>
-      <input className="radio"
-        type="radio"
-        name={props.id}
-        value="4"
-        onChange={props.handleChange}>
-      </input>
-
-      <label>strongly agree</label>
-      <input className="radio"
-        type="radio"
-        name={props.id}
-        value="5"
-        onChange={props.handleChange}>
-      </input>
-
-    </div>
-  )
-}
-
-export default Question 
-
-*/
