@@ -5,7 +5,6 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Select from 'react-select';
-import QuestionList from './QuestionList'
 import Question from './Question'
 
 
@@ -35,6 +34,7 @@ class Voter extends React.Component {
     this.getStuff('/api/parties', 'parties');
     this.getStuff('/api/districts', 'districts');
   }
+
 
   getStuff(url, stateArray) {
     fetch(url, {
@@ -115,8 +115,23 @@ class Voter extends React.Component {
     // Step 6: Return the ranking list
     this.setState({ rankedCandidates: ranking })
   }
+  async sendAnswers() {
+    fetch('/api/answers/addvoteranswers', {
+      headers: {
+        'Content-Type': 'application/json',
 
-  handleSubmit() {
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        district_id: this.state.selectedDistrict,
+        answers: this.state.questions,
+      })
+
+    })
+  }
+
+  async handleSubmit() {
+    await this.sendAnswers();
     this.rankCandidates(this.state.candidates, this.state.questions);
     this.setState({ step: 3 });
   }
