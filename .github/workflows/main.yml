@@ -28,4 +28,4 @@ jobs:
         buildpack: "heroku/nodejs"
         run_prebuild: "true"
         github_url: "https://github.com/pitkanentuukka/voting-front"
-        app_dir: "backend/public"
+        app_dir: "public"
