@@ -16,9 +16,7 @@ export default function QuestionForm(props) {
     const labels = ['strongly disagree', 'disagree', 'no opinion', 'agree', 'strongly agree']
     const value = props.selectedValue;
     const id = props.id;
-    useEffect(() => {
-        console.log(`selectedValue for question ${id} changed to ${value}`);
-    }, [value, id]);
+
 
     return (
         <Container>
